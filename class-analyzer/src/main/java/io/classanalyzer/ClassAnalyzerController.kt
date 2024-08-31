@@ -1,6 +1,5 @@
 package io.classanalyzer
 
-import org.apache.commons.io.FileUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spoon.JarLauncher
@@ -26,7 +25,7 @@ class ClassAnalyzerController {
     fun cleanDecompiled() {
         try {
             if (decompiledCodeDirectory.exists()) {
-                FileUtils.cleanDirectory(decompiledCodeDirectory)
+                decompiledCodeDirectory.deleteRecursively()
             }
         } catch (e: IOException) {
             logger.error("decompile 파일 삭제 과정 중 오류", e)
