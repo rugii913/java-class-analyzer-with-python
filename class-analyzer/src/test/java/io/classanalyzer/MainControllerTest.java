@@ -1,4 +1,4 @@
-package io.analyzer;
+package io.classanalyzer;
 
 import org.junit.jupiter.api.Test;
 

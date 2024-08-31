@@ -1,4 +1,4 @@
-package io.analyzer;
+package io.classanalyzer;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;

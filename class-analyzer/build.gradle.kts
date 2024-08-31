@@ -2,8 +2,8 @@ plugins {
     id("java")
 }
 
-group = "com"
-version = "1.0-SNAPSHOT"
+group = "io"
+version = "0.1-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
