@@ -1,12 +1,12 @@
 plugins {
     id("java")
+    kotlin("jvm")
 }
 
 group = "io"
 version = "0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
@@ -32,6 +32,7 @@ dependencies {
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks {
@@ -54,4 +55,8 @@ tasks {
         }
         with(jar.get())
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
