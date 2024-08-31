@@ -4,10 +4,15 @@ import org.junit.jupiter.api.Test
 
 class MainControllerTest {
 
-    private val controller: MainController = MainController()
+    private val controller: ClassAnalyzerController = ClassAnalyzerController()
 
     @Test
-    fun control() {
-        controller.control()
+    fun analyze() {
+        controller.analyze("target-jar\\java-class-analyzer-with-spoon-1.0-SNAPSHOT.jar")
+    }
+
+    @Test
+    fun cleanDecompiled() {
+        controller.cleanDecompiled()
     }
 }
