@@ -40,9 +40,6 @@ tasks {
     }
 
     register<Jar>("buildFatJar") {
-        manifest {
-            attributes("Main-Class" to "io.analyzer.MainController")
-        }
         duplicatesStrategy = DuplicatesStrategy.WARN // 파일명 중복 시 경고
         from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
             exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
