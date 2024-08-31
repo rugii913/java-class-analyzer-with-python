@@ -15,9 +15,6 @@ dependencies {
     // Spoon Decompiler 종속성 - JarLauncher를 사용하기 위함
     implementation("fr.inria.gforge.spoon:spoon-decompiler:0.1.0")
 
-    // Apache Commons IO 종속성 - 파일 처리
-    implementation("commons-io:commons-io:2.16.1")
-
     // SLF4J Simple Provider 종속성 - SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder" 오류에 대한 임시 조치
     /*
     * - 참고 자료
@@ -28,6 +25,8 @@ dependencies {
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    
+    // Kotlin 관련
     implementation(kotlin("stdlib-jdk8"))
 }
 
