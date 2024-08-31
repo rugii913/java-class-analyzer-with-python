@@ -5,6 +5,10 @@ plugins {
 group = "com"
 version = "1.0-SNAPSHOT"
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
 repositories {
     mavenCentral()
 }
@@ -30,6 +34,27 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks {
+    test {
+        useJUnitPlatform()
+    }
+
+    register<Jar>("buildFatJar") {
+        manifest {
+            attributes("Main-Class" to "io.analyzer.MainController")
+        }
+        duplicatesStrategy = DuplicatesStrategy.WARN // 파일명 중복 시 경고
+        from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
+            exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
+            /*
+            * exclude 관련 참고 - Invalid signature file digest for Manifest main attributes 런타임 오류 관련
+            * - 기타 블로그 - [Exception] java.lang.SecurityException: Invalid signature file digest for Manifest main attributes
+            *   - https://jojoldu.tistory.com/15
+            * - 기타 GitHub 이슈 - Please change build.gradle to avoid "Invalid signature file digest for Manifest main attributes" errors
+            *   - https://github.com/edvin/tornadofx-idea-plugin/issues/18
+            * */
+            // (cf.) 전체적인 구조는 인프런 "스프링 부트 - 핵심 원리와 활용"의 "스프링 부트와 웹 서버 - 빌드와 배포" 부분을 참고하였음
+        }
+        with(jar.get())
+    }
 }
