@@ -5,7 +5,8 @@ from service.table_writer import ClassDefinitionHwpTableWriter
 
 def main():
     classAnalyzerConnector = ClassAnalyzerConnector()
-    analyzed_model = classAnalyzerConnector.analyze("jars\\java-class-analyzer-with-spoon-1.0-SNAPSHOT.jar")
+    # analyzed_model = classAnalyzerConnector.analyze("jars\\java-class-analyzer-with-spoon-1.0-SNAPSHOT.jar")
+    analyzed_model = classAnalyzerConnector.analyze("jars\\class-analyzer-ex.jar")
 
     table_writer = ClassDefinitionHwpTableWriter(HwpConnector(), analyzed_model)
     table_writer.writeClassDefinitionTables()

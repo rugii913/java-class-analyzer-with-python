@@ -4,6 +4,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spoon.JarLauncher
 import spoon.reflect.CtModel
+import spoon.reflect.declaration.CtType
 import java.io.File
 import java.io.IOException
 
@@ -18,7 +19,23 @@ class ClassAnalyzerController {
         val jarLauncher = JarLauncher(targetJarPath, decompiledCodeDirectory.path)
         jarLauncher.buildModel()
         val model = jarLauncher.model
+        /*
+        for (targetType in model.allTypes) {
+            targetType.declaredFields.forEach {
+                val fieldDeclaration = it.fieldDeclaration
+                println(fieldDeclaration.getSimpleName())
+                println(fieldDeclaration.getVisibility())
+                println(fieldDeclaration.getType().simpleName)
+            }
 
+            targetType.methods.forEach {
+                println(it.getSimpleName())
+                println(it.getVisibility())
+                println(it.getParameters().map { it.getType().getSimpleName() })
+                println(it.getType())
+            }
+        }
+*/
         return model
     }
 
@@ -32,4 +49,9 @@ class ClassAnalyzerController {
             throw RuntimeException(e)
         }
     }
+    /*
+    fun test(test1: String, test2: List<Map<String, String>>) {
+        return
+    }
+    */
 }
