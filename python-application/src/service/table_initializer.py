@@ -87,6 +87,11 @@ class HwpTableInitializer:
         hwp.Run("TableCellBlockExtend")
         hwp.Run("TableColBegin")
         self.__applyCellCharShapeBold()
+        hwp.Run("TableCellBlock")
+        hwp.Run("TableCellBlockExtend")
+        hwp.Run("TableColEnd")
+        hwp.Run("ParagraphShapeAlignCenter") # 문단 모양 가운데 정렬
+        hwp.Run("Cancel")
 
         # - 다섯번째 row 작업
         hwp.Run("TableCellBlock")
@@ -110,7 +115,10 @@ class HwpTableInitializer:
         hwp.Run("TableCellBlockExtend")
         hwp.Run("TableColBegin")
         self.__applyCellCharShapeBold()
-
+        hwp.Run("TableCellBlock")
+        hwp.Run("TableCellBlockExtend")
+        hwp.Run("TableColEnd")
+        hwp.Run("ParagraphShapeAlignCenter") # 문단 모양 가운데 정렬
         hwp.Run("Cancel")
 
     def __moveCaretToFirstCell(self):
