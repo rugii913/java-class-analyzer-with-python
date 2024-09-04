@@ -15,6 +15,11 @@ venv.bak/
 java-analyzer-venv/
 # pycache
 __pycache__
+# build output
+build/**
+dist/**
+# temporarily igore
+*.spec
 
 # --------------------------------------------------------------------------------------------------------- #
 
