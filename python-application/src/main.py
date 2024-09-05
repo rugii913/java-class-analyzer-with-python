@@ -5,8 +5,9 @@ from service.table_writer import ClassDefinitionHwpTableWriter
 
 def main():
     classAnalyzerConnector = ClassAnalyzerConnector()
-    # analyzed_model = classAnalyzerConnector.analyze("jars\\java-class-analyzer-with-spoon-1.0-SNAPSHOT.jar")
-    analyzed_model = classAnalyzerConnector.analyze("jars\\class-analyzer-ex.jar")
+    print("분석할 jar 파일의 경로를 입력하세요. >>> ", end = "") # (ex.) C:\toy-project\java-class-analyzer-with-python\python-application\jars\class-analyzer-ex.jar
+    target_jar_path = input()
+    analyzed_model = classAnalyzerConnector.analyze(target_jar_path)
 
     table_writer = ClassDefinitionHwpTableWriter(HwpConnector(), analyzed_model)
     table_writer.writeClassDefinitionTables()
