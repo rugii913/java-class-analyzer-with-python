@@ -1,18 +1,16 @@
-from service.class_analyzer_connector import ClassAnalyzerConnector
-from service.hwp_connector import HwpConnector
-from service.table_writer import ClassDefinitionHwpTableWriter
+import sys
+
+from PyQt6.QtWidgets import QApplication
+
+from gui.main_window import MainWindow
 
 
 def main():
-    classAnalyzerConnector = ClassAnalyzerConnector()
-    # analyzed_model = classAnalyzerConnector.analyze("jars\\java-class-analyzer-with-spoon-1.0-SNAPSHOT.jar")
-    analyzed_model = classAnalyzerConnector.analyze("jars\\class-analyzer-ex.jar")
 
-    table_writer = ClassDefinitionHwpTableWriter(HwpConnector(), analyzed_model)
-    table_writer.writeClassDefinitionTables()
-
-    classAnalyzerConnector.cleanDecompiled()
-    classAnalyzerConnector.shutdown()
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":

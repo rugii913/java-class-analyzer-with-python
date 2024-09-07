@@ -28,27 +28,28 @@ class ClassDefinitionHwpTableWriter:
         hwp.Run("Cancel")
 
         fields = target_type.getDeclaredFields()
-        # fields 사이즈 - 1만큼 행 추가
-        hwp.HAction.GetDefault("TableInsertRowColumn", hwp.HParameterSet.HTableInsertLine.HSet)
-        hwp.HParameterSet.HTableInsertLine.Side = 3
-        hwp.HParameterSet.HTableInsertLine.Count = (fields.size() - 1)
-        hwp.HAction.Execute("TableInsertRowColumn", hwp.HParameterSet.HTableInsertLine.HSet)
+        if field.size() > 0:
+            # fields 사이즈 - 1만큼 행 추가
+            hwp.HAction.GetDefault("TableInsertRowColumn", hwp.HParameterSet.HTableInsertLine.HSet)
+            hwp.HParameterSet.HTableInsertLine.Side = 3
+            hwp.HParameterSet.HTableInsertLine.Count = (fields.size() - 1)
+            hwp.HAction.Execute("TableInsertRowColumn", hwp.HParameterSet.HTableInsertLine.HSet)
 
-        # fields 순회하며 속성명, 가시성, 타입, 기본값(N/A) 순으로 작성
-        for index, field in enumerate(fields):
-            field_declaration = field.getFieldDeclaration()
-            self.__writeCellText(str(field_declaration.getSimpleName()))
-            hwp.Run("MoveRight")
-            self.__writeCellText(str(field_declaration.getVisibility()))
-            hwp.Run("MoveRight")
-            self.__writeCellText(str(field_declaration.getType().getSimpleName()))
-            hwp.Run("MoveRight")
-            self.__writeCellText("N/A")
-            if index != (fields.size() - 1):
-                hwp.Run("TableCellBlock")
-                hwp.Run("TableColBegin")
-                hwp.Run("TableLowerCell")
-                hwp.Run("Cancel")
+            # fields 순회하며 속성명, 가시성, 타입, 기본값(N/A) 순으로 작성
+            for index, field in enumerate(fields):
+                field_declaration = field.getFieldDeclaration()
+                self.__writeCellText(str(field_declaration.getSimpleName()))
+                hwp.Run("MoveRight")
+                self.__writeCellText(str(field_declaration.getVisibility()))
+                hwp.Run("MoveRight")
+                self.__writeCellText(str(field_declaration.getType().getSimpleName()))
+                hwp.Run("MoveRight")
+                self.__writeCellText("N/A")
+                if index != (fields.size() - 1):
+                    hwp.Run("TableCellBlock")
+                    hwp.Run("TableColBegin")
+                    hwp.Run("TableLowerCell")
+                    hwp.Run("Cancel")
 
         # methods 텍스트 입력할 위치로(마지막 행 첫 열)
         hwp.Run("TableCellBlock")
@@ -57,26 +58,27 @@ class ClassDefinitionHwpTableWriter:
         hwp.Run("Cancel")
 
         methods = target_type.getMethods()
-        # methods 사이즈 - 1만큼 행 추가
-        hwp.HAction.GetDefault("TableInsertRowColumn", hwp.HParameterSet.HTableInsertLine.HSet)
-        hwp.HParameterSet.HTableInsertLine.Side = 3
-        hwp.HParameterSet.HTableInsertLine.Count = (methods.size() - 1)
-        hwp.HAction.Execute("TableInsertRowColumn", hwp.HParameterSet.HTableInsertLine.HSet)
+        if methods.size() > 0:
+            # methods 사이즈 - 1만큼 행 추가
+            hwp.HAction.GetDefault("TableInsertRowColumn", hwp.HParameterSet.HTableInsertLine.HSet)
+            hwp.HParameterSet.HTableInsertLine.Side = 3
+            hwp.HParameterSet.HTableInsertLine.Count = (methods.size() - 1)
+            hwp.HAction.Execute("TableInsertRowColumn", hwp.HParameterSet.HTableInsertLine.HSet)
 
-        # methods 순회하며 오퍼레이션명, 가시성, 파라미터, 반환타입 순으로 작성
-        for index, method in enumerate(methods):
-            self.__writeCellText(str(method.getSimpleName()))
-            hwp.Run("MoveRight")
-            self.__writeCellText(str(method.getVisibility()))
-            hwp.Run("MoveRight")
-            self.__writeMethodParameters(method.getParameters())
-            hwp.Run("MoveRight")
-            self.__writeCellText(str(method.getType().getSimpleName()))
-            if index != (methods.size() - 1):
-                hwp.Run("TableCellBlock")
-                hwp.Run("TableColBegin")
-                hwp.Run("TableLowerCell")
-                hwp.Run("Cancel")
+            # methods 순회하며 오퍼레이션명, 가시성, 파라미터, 반환타입 순으로 작성
+            for index, method in enumerate(methods):
+                self.__writeCellText(str(method.getSimpleName()))
+                hwp.Run("MoveRight")
+                self.__writeCellText(str(method.getVisibility()))
+                hwp.Run("MoveRight")
+                self.__writeMethodParameters(method.getParameters())
+                hwp.Run("MoveRight")
+                self.__writeCellText(str(method.getType().getSimpleName()))
+                if index != (methods.size() - 1):
+                    hwp.Run("TableCellBlock")
+                    hwp.Run("TableColBegin")
+                    hwp.Run("TableLowerCell")
+                    hwp.Run("Cancel")
 
         # 설계 클래스명 기입
         hwp.Run("TableCellBlock")
