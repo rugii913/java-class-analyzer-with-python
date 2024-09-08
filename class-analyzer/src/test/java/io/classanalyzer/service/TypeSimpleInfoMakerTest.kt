@@ -14,7 +14,7 @@ class TypeSimpleInfoMakerTest {
     private val targetClassText = """
         class ClassForTest {
             public List<String> fieldTest = null;
-            public Set<Map<String, String>> methodTest {
+            public Set<Map<String, String>> methodTest(String[] arg1, Map<Long, String> arg2) {
                 return null;
             }
         }
