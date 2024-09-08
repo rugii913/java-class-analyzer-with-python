@@ -15,7 +15,7 @@ class TypeSimpleInfoProvider {
         return ctModel.allTypes.map { refineToTypeSimpleInfo(it) }
     }
 
-    private fun <T> refineToTypeSimpleInfo(ctType: CtType<T>): TypeSimpleInfo {
+    private fun refineToTypeSimpleInfo(ctType: CtType<*>): TypeSimpleInfo {
         val refinedFields = ctType.fields.map { refineToFieldSimpleInfo(it) }
         val refinedMethods = ctType.methods
             .sortedWith(Comparator.comparing { it.position.line }) // 메서드 선언 순서대로 정렬
@@ -28,14 +28,14 @@ class TypeSimpleInfoProvider {
         )
     }
 
-    private fun <T> refineToFieldSimpleInfo(ctField: CtField<T>) =
+    private fun refineToFieldSimpleInfo(ctField: CtField<*>) =
         FieldSimpleInfo(
             simpleName = ctField.simpleName,
             visibility = ctField.visibility.name,
             type = flattenCtTypeReference(ctField.type),
         )
 
-    private fun <T> refineToMethodSimpleInfo(ctMethod: CtMethod<T>) =
+    private fun refineToMethodSimpleInfo(ctMethod: CtMethod<*>) =
         MethodSimpleInfo(
             simpleName = ctMethod.simpleName,
             visibility = ctMethod.visibility.name,
