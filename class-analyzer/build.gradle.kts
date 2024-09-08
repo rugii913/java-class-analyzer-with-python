@@ -39,7 +39,8 @@ tasks {
         useJUnitPlatform()
     }
 
-    register<Jar>("buildFatJar") {
+    register<Jar>("fatJar") {
+        group = "build" // 참고 - https://kwonnam.pe.kr/wiki/gradle/task (Gradle Task)
         duplicatesStrategy = DuplicatesStrategy.WARN // 파일명 중복 시 경고
         from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
             exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
