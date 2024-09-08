@@ -21,14 +21,14 @@ class ClassAnalyzerConnector(metaclass=ClassAnalyzerConectorMeta):
     def __init__(self) -> None:
         jpype.startJVM(
             jvmpath=jpype.getDefaultJVMPath(),
-            classpath="analyzer/class-analyzer-0.1-SNAPSHOT.jar",
+            classpath="analyzer/class-analyzer-0.2-SNAPSHOT.jar",
         )
         ClassAnalyzerController = jpype.JClass(
             "io.classanalyzer.ClassAnalyzerController"
         )
         self.__classAnalyzerController = ClassAnalyzerController()
 
-    # 대상 jar 파일 분석 후 CtModel 반환
+    # 대상 jar 파일 분석 후 List<TypeSimpleInfo> 반환
     def analyze(self, target_jar_path):
         return self.__classAnalyzerController.analyze(target_jar_path)
 

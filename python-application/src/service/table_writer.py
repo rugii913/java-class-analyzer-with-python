@@ -4,17 +4,17 @@ from service.table_initializer import HwpTableInitializer
 
 class ClassDefinitionHwpTableWriter:
 
-    def __init__(self, hwp_connector: HwpConnector, analyzed_model):
+    def __init__(self, hwp_connector: HwpConnector, type_simple_info_list):
         self.__hwp = hwp_connector.hwp
         self.__table_initializer = HwpTableInitializer(hwp_connector)
-        self.__analyzed_model = analyzed_model
+        self.__type_simple_info_list = type_simple_info_list
 
     def writeClassDefinitionTables(self):
-        for target_type in self.__analyzed_model.getAllTypes():
-            self.__writeEachTable(target_type)
+        for type_simple_info in self.__type_simple_info_list:
+            self.__writeEachTable(type_simple_info)
             self.__addNewLineToDocumentEnd()
 
-    def __writeEachTable(self, target_type):
+    def __writeEachTable(self, type_simple_info):
         self.__table_initializer.InitializeFormTable()
 
         hwp = self.__hwp  # 사용 편의를 위한 지역변수 선언
@@ -27,8 +27,8 @@ class ClassDefinitionHwpTableWriter:
         hwp.Run("TableLowerCell")
         hwp.Run("Cancel")
 
-        fields = target_type.getDeclaredFields()
-        if field.size() > 0:
+        fields = type_simple_info.getFields()
+        if fields.size() > 0:
             # fields 사이즈 - 1만큼 행 추가
             hwp.HAction.GetDefault("TableInsertRowColumn", hwp.HParameterSet.HTableInsertLine.HSet)
             hwp.HParameterSet.HTableInsertLine.Side = 3
@@ -37,12 +37,11 @@ class ClassDefinitionHwpTableWriter:
 
             # fields 순회하며 속성명, 가시성, 타입, 기본값(N/A) 순으로 작성
             for index, field in enumerate(fields):
-                field_declaration = field.getFieldDeclaration()
-                self.__writeCellText(str(field_declaration.getSimpleName()))
+                self.__writeCellText(str(field.getSimpleName()))
                 hwp.Run("MoveRight")
-                self.__writeCellText(str(field_declaration.getVisibility()))
+                self.__writeCellText(str(field.getVisibility()))
                 hwp.Run("MoveRight")
-                self.__writeCellText(str(field_declaration.getType().getSimpleName()))
+                self.__writeCellText(str(field.getType()))
                 hwp.Run("MoveRight")
                 self.__writeCellText("N/A")
                 if index != (fields.size() - 1):
@@ -57,7 +56,7 @@ class ClassDefinitionHwpTableWriter:
         hwp.Run("TableColPageDown")
         hwp.Run("Cancel")
 
-        methods = target_type.getMethods()
+        methods = type_simple_info.getMethods()
         if methods.size() > 0:
             # methods 사이즈 - 1만큼 행 추가
             hwp.HAction.GetDefault("TableInsertRowColumn", hwp.HParameterSet.HTableInsertLine.HSet)
@@ -71,9 +70,9 @@ class ClassDefinitionHwpTableWriter:
                 hwp.Run("MoveRight")
                 self.__writeCellText(str(method.getVisibility()))
                 hwp.Run("MoveRight")
-                self.__writeMethodParameters(method.getParameters())
+                self.__writeMethodParameters(method.getParameterTypeList())
                 hwp.Run("MoveRight")
-                self.__writeCellText(str(method.getType().getSimpleName()))
+                self.__writeCellText(str(method.getReturnType()))
                 if index != (methods.size() - 1):
                     hwp.Run("TableCellBlock")
                     hwp.Run("TableColBegin")
@@ -85,7 +84,7 @@ class ClassDefinitionHwpTableWriter:
         hwp.Run("TableColEnd")
         hwp.Run("TableColPageUp")
         hwp.Run("Cancel")
-        self.__writeCellText(str(target_type.getSimpleName()))
+        self.__writeCellText(str(type_simple_info.getSimpleName()))
 
     def __addNewLineToDocumentEnd(self):
         hwp = self.__hwp  # 사용 편의를 위한 지역변수 선언
@@ -99,11 +98,11 @@ class ClassDefinitionHwpTableWriter:
         hwp.HParameterSet.HInsertText.Text = text
         hwp.HAction.Execute("InsertText", hwp.HParameterSet.HInsertText.HSet)
 
-    def __writeMethodParameters(self, parameter_list):
-        if parameter_list.size() == 0:
+    def __writeMethodParameters(self, parameter_type_list):
+        if parameter_type_list.size() == 0:
             self.__writeCellText("N/A")
 
-        for index, parameter in enumerate(parameter_list):
-            self.__writeCellText(str(parameter.getType().getSimpleName()))
-            if index != (parameter_list.size() - 1):
+        for index, parameter_type in enumerate(parameter_type_list):
+            self.__writeCellText(str(parameter_type))
+            if index != (parameter_type_list.size() - 1):
                 self.__writeCellText(",\r\n") # 한글에서는 \n으로는 \r\n으로 줄바꿈
