@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "io"
-version = "0.1-SNAPSHOT"
+version = "0.2-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -23,9 +23,13 @@ dependencies {
     * */
     implementation("org.slf4j:slf4j-simple:2.0.16") // (cf.) implementation("org.slf4j:slf4j-api:2.0.16")는 spoon-core에 포함됨
 
+    // test - JUnit5
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    
+    // test - AssertJ Core
+    testImplementation("org.assertj:assertj-core:3.26.3")
+
+
     // Kotlin 관련
     implementation(kotlin("stdlib-jdk8"))
 }
@@ -35,7 +39,8 @@ tasks {
         useJUnitPlatform()
     }
 
-    register<Jar>("buildFatJar") {
+    register<Jar>("fatJar") {
+        group = "build" // 참고 - https://kwonnam.pe.kr/wiki/gradle/task (Gradle Task)
         duplicatesStrategy = DuplicatesStrategy.WARN // 파일명 중복 시 경고
         from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
             exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")

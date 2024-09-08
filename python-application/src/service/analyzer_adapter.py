@@ -10,9 +10,9 @@ class AnalyzerAdapter:
     def analyze(self, target_jar_path: str):
         class_analyzer_connector = self.__class_analyzer_connector
 
-        analyzed_model = class_analyzer_connector.analyze(target_jar_path)
+        type_simple_info_list = class_analyzer_connector.analyze(target_jar_path)
 
-        table_writer = ClassDefinitionHwpTableWriter(HwpConnector(), analyzed_model)
+        table_writer = ClassDefinitionHwpTableWriter(HwpConnector(), type_simple_info_list)
         table_writer.writeClassDefinitionTables()
 
         class_analyzer_connector.cleanDecompiled()
