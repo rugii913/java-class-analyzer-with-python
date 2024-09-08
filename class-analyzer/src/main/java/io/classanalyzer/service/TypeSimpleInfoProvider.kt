@@ -31,14 +31,14 @@ class TypeSimpleInfoProvider {
     private fun refineToFieldSimpleInfo(ctField: CtField<*>) =
         FieldSimpleInfo(
             simpleName = ctField.simpleName,
-            visibility = ctField.visibility.name,
+            visibility = ctField.visibility.toString(),
             type = flattenCtTypeReference(ctField.type),
         )
 
     private fun refineToMethodSimpleInfo(ctMethod: CtMethod<*>) =
         MethodSimpleInfo(
             simpleName = ctMethod.simpleName,
-            visibility = ctMethod.visibility.name,
+            visibility = ctMethod.visibility.toString(),
             parameterTypeList = ctMethod.parameters.map { flattenCtTypeReference(it.type) },
             returnType = flattenCtTypeReference(ctMethod.type),
         )
