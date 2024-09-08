@@ -34,6 +34,7 @@ class TypeSimpleInfoMakerTest {
 
         assertThat(typeSimpleInformation.simpleName).isEqualTo("ClassForTest")
         assertThat(typeSimpleInformation.fields[0].type).isEqualTo("List<String>")
+        assertThat(typeSimpleInformation.methods[0].parameterTypeList).isEqualTo(listOf("String[]", "Map<Long, String>"))
         assertThat(typeSimpleInformation.methods[0].returnType).isEqualTo("Set<Map<String, String>>")
     }
 }
