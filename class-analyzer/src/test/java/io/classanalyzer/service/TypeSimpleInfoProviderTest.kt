@@ -16,17 +16,23 @@ class TypeSimpleInfoProviderTest {
     private val typeSimpleInfoList: List<TypeSimpleInfo>
 
     init {
-        val sourceCodeFileOfClassWithGenericType = File.createTempFile(SIMPLE_NAME_OF_CLASS_WITH_GENERIC_TYPE, ".java")
-        val sourceCodeFileOfClassWithManyMethods = File.createTempFile(SIMPLE_NAME_OF_CLASS_WITH_MANY_METHODS, ".java")
+        val launcher = Launcher()
 
         // (cf.) use()는 let()과 비슷한데, Closeable에 대해 호출하는 함수
-        FileWriter(sourceCodeFileOfClassWithGenericType).use { writer -> writer.write(classTextWithGenericType) }
-        FileWriter(sourceCodeFileOfClassWithManyMethods).use { writer -> writer.write(classTextWithManyMethods) }
+        File.createTempFile(SIMPLE_NAME_OF_CLASS_WITH_GENERIC_TYPE, ".java")
+            .also { FileWriter(it).use { writer -> writer.write(classTextWithGenericType) } }
+            .also { launcher.addInputResource(it.absolutePath) }
+        File.createTempFile(SIMPLE_NAME_OF_CLASS_WITH_MANY_METHODS, ".java")
+            .also { FileWriter(it).use { writer -> writer.write(classTextWithManyMethods) } }
+            .also { launcher.addInputResource(it.absolutePath) }
+        File.createTempFile(SIMPLE_NAME_OF_CLASS_WITH_MEMBER_DECLARED_WITHOUT_ACCESS_MODIFIER, ".java")
+            .also { FileWriter(it).use { writer -> writer.write(classTextWithMemberDeclaredWithoutAccessModifier) } }
+            .also { launcher.addInputResource(it.absolutePath) }
+        File.createTempFile(SIMPLE_NAME_OF_INTERFACE_WITH_MEMBER_DECLARED_WITHOUT_ACCESS_MODIFIER, ".java")
+            .also { FileWriter(it).use { writer -> writer.write(interfaceTextWithMemberDeclaredWithoutAccessModifier) } }
+            .also { launcher.addInputResource(it.absolutePath) }
 
-        ctModel = Launcher().also {
-            it.addInputResource(sourceCodeFileOfClassWithGenericType.absolutePath)
-            it.addInputResource(sourceCodeFileOfClassWithManyMethods.absolutePath)
-        }.buildModel()
+        ctModel = launcher.buildModel()
 
         typeSimpleInfoList = typeSimpleInfoProvider.provideTypeSimpleInfoList(ctModel)
     }
@@ -53,6 +59,26 @@ class TypeSimpleInfoProviderTest {
         assertThat(simpleInfoOfClassWithManyMethods.methods[2].simpleName).isEqualTo(NAME_OF_THIRD_METHOD)
         assertThat(simpleInfoOfClassWithManyMethods.methods[3].simpleName).isEqualTo(NAME_OF_FOURTH_METHOD)
         assertThat(simpleInfoOfClassWithManyMethods.methods[4].simpleName).isEqualTo(NAME_OF_FIFTH_METHOD)
+    }
+
+    @Test
+    fun givenClassWithMemberDeclaredWithoutAccessModifierWhenTypeSimpleInfoProviderSimplifiedTargetClassThenVisibilitySimpleInfoOfMemberDeclaredWithoutAccessModifierIsPackage() {
+        /*
+        * access modifier가 명시되지 않은 경우, 단순하게 visibility에 toString()을 호출하면 NPE 발생
+        * - Cannot invoke "spoon.reflect.declaration.ModifierKind.toString()" because the return value of "spoon.reflect.declaration.CtMethod.getVisibility()" is null
+        * */
+        val simpleInfoOfClassWithMethodWithoutModifier = typeSimpleInfoList.first { it.simpleName == SIMPLE_NAME_OF_CLASS_WITH_MEMBER_DECLARED_WITHOUT_ACCESS_MODIFIER }
+
+        assertThat(simpleInfoOfClassWithMethodWithoutModifier.simpleName).isEqualTo(SIMPLE_NAME_OF_CLASS_WITH_MEMBER_DECLARED_WITHOUT_ACCESS_MODIFIER)
+        assertThat(simpleInfoOfClassWithMethodWithoutModifier.methods[0].visibility).isEqualTo("package")
+    }
+
+    @Test
+    fun givenInterfaceWithMemberDeclaredWithoutAccessModifierWhenTypeSimpleInfoProviderSimplifiedTargetInterfaceThenVisibilitySimpleInfoOfMemberDeclaredWithoutAccessModifierIsPackage() {
+        val simpleInfoOfInterfaceWithMethodWithoutModifier = typeSimpleInfoList.first { it.simpleName == SIMPLE_NAME_OF_INTERFACE_WITH_MEMBER_DECLARED_WITHOUT_ACCESS_MODIFIER }
+
+        assertThat(simpleInfoOfInterfaceWithMethodWithoutModifier.simpleName).isEqualTo(SIMPLE_NAME_OF_INTERFACE_WITH_MEMBER_DECLARED_WITHOUT_ACCESS_MODIFIER)
+        assertThat(simpleInfoOfInterfaceWithMethodWithoutModifier.methods[0].visibility).isEqualTo("public")
     }
 
     companion object {
@@ -89,6 +115,25 @@ class TypeSimpleInfoProviderTest {
                 public void $NAME_OF_FOURTH_METHOD() {}
                 
                 public void $NAME_OF_FIFTH_METHOD() {}
+            }
+        """.trimIndent()
+
+        private const val SIMPLE_NAME_OF_CLASS_WITH_MEMBER_DECLARED_WITHOUT_ACCESS_MODIFIER = "ClassWithMemberDeclaredWithoutAccessModifier"
+
+        private val classTextWithMemberDeclaredWithoutAccessModifier = """
+            public class $SIMPLE_NAME_OF_CLASS_WITH_MEMBER_DECLARED_WITHOUT_ACCESS_MODIFIER {
+                String fieldDeclaredWithoutAccessModifier = "";
+            
+                void methodDeclaredWithoutAccessModifier() {}
+            }
+        """.trimIndent()
+
+        private const val SIMPLE_NAME_OF_INTERFACE_WITH_MEMBER_DECLARED_WITHOUT_ACCESS_MODIFIER = "InterfaceWithMemberDeclaredWithoutAccessModifier"
+
+        private val interfaceTextWithMemberDeclaredWithoutAccessModifier = """
+            interface $SIMPLE_NAME_OF_INTERFACE_WITH_MEMBER_DECLARED_WITHOUT_ACCESS_MODIFIER {
+            
+                void methodDeclaredWithoutAccessModifier();
             }
         """.trimIndent()
     }
