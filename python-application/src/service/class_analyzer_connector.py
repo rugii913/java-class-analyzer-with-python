@@ -21,7 +21,7 @@ class ClassAnalyzerConnector(metaclass=ClassAnalyzerConectorMeta):
     def __init__(self) -> None:
         jpype.startJVM(
             jvmpath=jpype.getDefaultJVMPath(),
-            classpath="analyzer/class-analyzer-0.2-SNAPSHOT.jar",
+            classpath="analyzer/class-analyzer-0.2.1-SNAPSHOT.jar",
         )
         ClassAnalyzerController = jpype.JClass(
             "io.classanalyzer.ClassAnalyzerController"
